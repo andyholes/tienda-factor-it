@@ -1,0 +1,104 @@
+package com.factorit.challenge.impl;
+
+import com.factorit.challenge.model.ClientUser;
+import com.factorit.challenge.model.ShoppingCart;
+import com.factorit.challenge.model.payload.ShoppingCartRequest;
+import com.factorit.challenge.repository.ClientUserRepository;
+import com.factorit.challenge.repository.ProductInShoppingCartRepository;
+import com.factorit.challenge.repository.ProductRepository;
+import com.factorit.challenge.repository.ShoppingCartRepository;
+import com.factorit.challenge.repository.SpecialDateRepository;
+import com.factorit.challenge.service.impl.ShoppingCartServiceImpl;
+import com.factorit.challenge.utils.EntityMapper;
+import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+
+public class ShoppingCartServiceImplTest {
+    @InjectMocks
+    private ShoppingCartServiceImpl cartService;
+
+    @Mock
+    private ShoppingCartRepository shoppingCartRepository;
+
+    @Mock
+    private ProductInShoppingCartRepository productInShoppingCartRepository;
+
+    @Mock
+    private ProductRepository productRepository;
+
+    @Mock
+    private EntityMapper mapper;
+
+    @Mock
+    private ClientUserRepository userRepository;
+
+    @Mock
+    private SpecialDateRepository dateRepository;
+
+    @Test
+    public void testAddProduct_NullClientId() {
+        ShoppingCartRequest request = new ShoppingCartRequest(null,LocalDate.now(),1L,1);
+
+        assertThrows(IllegalArgumentException.class, () -> cartService.addProduct(request));
+    }
+
+    @Test
+    public void testAddProduct_NegativeQuantity() {
+        ShoppingCartRequest request = new ShoppingCartRequest(1L,LocalDate.now(),1L,-1);
+
+        assertThrows(IllegalArgumentException.class, () -> cartService.addProduct(request));
+    }
+
+    @Test
+    public void testAddProduct_NonExistentUser() {
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        ShoppingCartRequest request = new ShoppingCartRequest(1L,LocalDate.now(),1L,1);
+
+        assertThrows(EntityNotFoundException.class, () -> cartService.addProduct(request));
+    }
+
+    @Test
+    public void testAddProduct_NonExistentProduct() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new ClientUser()));
+        when(productRepository.findById(1L)).thenReturn(Optional.empty());
+        ShoppingCartRequest request = new ShoppingCartRequest(1L,LocalDate.now(),1L,1);
+
+        assertThrows(EntityNotFoundException.class, () -> cartService.addProduct(request));
+    }
+
+    @Test
+    public void testDelete_PaidCart() {
+        ShoppingCart paidCart = new ShoppingCart();
+        paidCart.setPaid(true);
+        when(shoppingCartRepository.findById(1L)).thenReturn(Optional.of(paidCart));
+
+        assertThrows(UnsupportedOperationException.class, () -> cartService.delete(1L));
+    }
+
+    @Test
+    public void testDelete_NonExistentCart() {
+        when(shoppingCartRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> cartService.delete(1L));
+    }
+
+    @Test
+    public void testRemoveProduct_NonExistentCart() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> cartService.removeProduct(1L, 2L));
+    }
+}
