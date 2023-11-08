@@ -1,0 +1,101 @@
+package com.factorit.challenge.controller;
+
+import com.factorit.challenge.model.payload.ShoppingCartRequest;
+import com.factorit.challenge.model.payload.ShoppingCartResponse;
+import com.factorit.challenge.service.ShoppingCartService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.factorit.challenge.utils.MessageConstants.CART_DELETED_SUCCESSFULLY;
+import static com.factorit.challenge.utils.MessageConstants.CART_PAID_SUCCESSFULLY;
+import static com.factorit.challenge.utils.MessageConstants.PRODUCT_REMOVED_SUCCESSFULLY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
+
+public class ShoppingCartControllerTest {
+
+    @InjectMocks
+    private ShoppingCartController shoppingCartController;
+
+    @Mock
+    private ShoppingCartService shoppingCartService;
+
+    @BeforeEach
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Test
+    void testGetAll() {
+        when(shoppingCartService.getAll(anyLong(), anyBoolean()))
+                .thenReturn(List.of(/* Create Shopping Cart Response objects */));
+
+        ResponseEntity<List<ShoppingCartResponse>> response = shoppingCartController.getAll(1L, true);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void testGetById() {
+        when(shoppingCartService.getById(anyLong()))
+                .thenReturn(new ShoppingCartResponse(1L, new ArrayList<>(),
+                        BigDecimal.ONE, BigDecimal.ONE, false, LocalDate.now(), false, false));
+
+        ResponseEntity<ShoppingCartResponse> response = shoppingCartController.getById(1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void testAddProduct() {
+        when(shoppingCartService.addProduct(any(ShoppingCartRequest.class)))
+                .thenReturn(new ShoppingCartResponse(1L, new ArrayList<>(),
+                        BigDecimal.ONE, BigDecimal.ONE, false, LocalDate.now(), false, false));
+
+        ShoppingCartRequest request = new ShoppingCartRequest(1L, LocalDate.now(), 1L, 1);
+
+        ResponseEntity<ShoppingCartResponse> response = shoppingCartController.addProduct(request);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void testRemoveProduct() {
+        ResponseEntity<String> response = shoppingCartController.removeProduct(1L, 2L);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(PRODUCT_REMOVED_SUCCESSFULLY, response.getBody());
+    }
+
+    @Test
+    void testPay() {
+        ResponseEntity<String> response = shoppingCartController.pay(1L);
+
+        assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
+        assertEquals(CART_PAID_SUCCESSFULLY, response.getBody());
+    }
+
+    @Test
+    void testDelete() {
+        ResponseEntity<String> response = shoppingCartController.delete(1L);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(CART_DELETED_SUCCESSFULLY, response.getBody());
+    }
