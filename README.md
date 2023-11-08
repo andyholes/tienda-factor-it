@@ -30,11 +30,8 @@ Before you can run the "Tienda FACTOR IT", please ensure that you have the follo
    ```bash
    git clone https://github.com/andyholes/tienda-factor-it.git
 
-2. To start both the backend and frontend together, you can use the provided start-app.sh script.
-   This script will launch both the backend and frontend components simultaneously.
-    ```bash
-    ./start-app.sh
-
+2. Start both the backend and frontend together.
+   
 ## Documentation
 
 You can access Swagger to get a list of the available endpoints exposed by the API.
