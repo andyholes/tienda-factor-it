@@ -58,7 +58,8 @@ function App() {
         </Routes>
       </Router>
       {message && <Alert message={message} onClose={closeAlert} />}
-      <footer>andyholes - 2023 - <a target="blank" href={process.env.REACT_APP_BASE_URL+"/swagger-ui/index.html"}>documentación</a></footer>
+        <footer style={{position: 'fixed', bottom: '10px', left: '50%', transform: 'translateX(-50%)'}}>
+        andyholes - 2023 - <a target="blank" href={process.env.REACT_APP_BASE_URL+"/swagger-ui/index.html"}>documentación</a></footer>
     </div>
   );
 }
