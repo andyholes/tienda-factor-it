@@ -23,10 +23,6 @@ Before you can run the "Tienda FACTOR IT", please ensure that you have the follo
     - Version: 16.10 (or a compatible version)
     - [React Documentation](https://reactjs.org/)
 
-- **MySQL**: Relational database management system
-    - Version: 5.7 (or a compatible version)
-    - [Download MySQL](https://dev.mysql.com/downloads/)
-
 ## Installation
 
 1. **Clone the Repository**: Clone the "Tienda FACTOR IT" repository to your local machine:
