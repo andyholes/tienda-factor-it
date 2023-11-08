@@ -1,5 +1,6 @@
 package com.factorit.challenge.config;
 
+import lombok.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -14,8 +15,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
 
+        @Value("${allowed-origins}")
+        private String allowedOrigins;
+
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
+                .allowedOrigins(allowedOrigins)
                 .allowedMethods("GET","POST","PUT","DELETE");
     }
 }
