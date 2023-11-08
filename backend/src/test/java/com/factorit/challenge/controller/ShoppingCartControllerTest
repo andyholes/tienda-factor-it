@@ -99,3 +99,4 @@ public class ShoppingCartControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         assertEquals(CART_DELETED_SUCCESSFULLY, response.getBody());
     }
+}
