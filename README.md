@@ -36,3 +36,7 @@ Before you can run the "Tienda FACTOR IT", please ensure that you have the follo
 
 You can access Swagger to get a list of the available endpoints exposed by the API.
 To do so, once the project is nice and running, visit [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+## Accessing H2 database
+
+The project uses H2 in memory database. For accessing the ddbb console visit http://localhost:8080/h2-console/ with the parameters setted on the application.properties file
