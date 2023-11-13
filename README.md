@@ -30,7 +30,11 @@ Before you can run the "Tienda FACTOR IT", please ensure that you have the follo
    ```bash
    git clone https://github.com/andyholes/tienda-factor-it.git
 
-2. Start both the backend and frontend together.
+2. On the frontend folder run the following command
+   ```bash
+   npm install
+
+3. Start both the backend and frontend together.
    
 ## Documentation
 
