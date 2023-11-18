@@ -17,6 +17,10 @@ public class SwaggerConfig {
         devServer.setUrl("http://localhost:8080");
         devServer.setDescription("Server URL in Development environment");
 
+        Server deployment = new Server();
+        deployment.setUrl("https://tienda-factorit-2.onrender.com");
+        deployment.setDescription("Deployment URL");
+
         Contact contact = new Contact();
         contact.setEmail("andyholes@gmail.com");
         contact.setName("Andres Hoyos Garcia");
@@ -28,6 +32,6 @@ public class SwaggerConfig {
                 .contact(contact)
                 .description("Api desarrollada para el challenge fullstack de Factor IT. Se uso con Java y Spring Boot, con base de datos en memoria H2.");
 
-        return new OpenAPI().info(info).servers(List.of(devServer));
+        return new OpenAPI().info(info).servers(List.of(deployment, devServer));
     }
 }
